@@ -1,0 +1,125 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+class Quiz {
+    private List<Question> questions;
+    private int score;
+    private Timer timer;
+
+    public Quiz(List<Question> questions) {
+        this.questions = questions;
+        this.score = 0;
+        this.timer = new Timer();
+    }
+
+    public void start() {
+        for (Question question : questions) {
+            System.out.println(question.getQuestion());
+            for (Option option : question.getOptions()) {
+                System.out.println(option.getOption());
+            }
+            System.out.println("Enter the number of your chosen option:");
+            int choice = new Scanner(System.in).nextInt();
+            if (question.getCorrectOption().getNumber() == choice) {
+                score++;
+            }
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    System.out.println("Time's up!");
+                    timer.cancel();
+                }
+            }, 30 * 1000); // 30 seconds
+        }
+        System.out.println("Quiz complete. Your score is: " + score);
+    }
+}
+
+class Question {
+    private String question;
+    private List<Option> options;
+    private Option correctOption;
+
+    public Question(String question, List<Option> options, Option correctOption) {
+        this.question = question;
+        this.options = options;
+        this.correctOption = correctOption;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public List<Option> getOptions() {
+        return options;
+    }
+
+    public Option getCorrectOption() {
+        return correctOption;
+    }
+}
+
+class Option {
+    private String option;
+    private int number;
+
+    public Option(String option, int number) {
+        this.option = option;
+        this.number = number;
+    }
+
+    public String getOption() {
+        return option;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Option other = (Option) obj;
+        return number == other.number && (option == null ? other.option == null : option.equals(other.option));
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((option == null) ? 0 : option.hashCode());
+        result = prime * result + number;
+        return result;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Question> questions = new ArrayList<>();
+        questions.add(new Question("What is the capital of France?", List.of(
+                new Option("Paris", 1),
+                new Option("London", 2),
+                new Option("Berlin", 3),
+                new Option("Rome", 4)
+        ), new Option("Paris", 1)));
+        questions.add(new Question("What is the largest planet in our solar system?", List.of(
+                new Option("Earth", 1),
+                new Option("Saturn", 2),
+                new Option("Jupiter", 3),
+                new Option("Uranus", 4)
+        ), new Option("Jupiter", 3)));
+        questions.add(new Question("What is the smallest country in the world?", List.of(
+                new Option("Vatican City", 1),
+                new Option("Monaco", 2),
+                new Option("Nauru", 3),
+                new Option("Tuvalu", 4)
+        ), new Option("Vatican City", 1)));
+
+        Quiz quiz = new Quiz(questions);
+        quiz.start();
+    }
+}

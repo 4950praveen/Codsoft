@@ -1,0 +1,119 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Course {
+    private String code;
+    private String title;
+    private String description;
+    private int capacity;
+    private String schedule;
+
+    public Course(String code, String title, String description, int capacity, String schedule) {
+        this.code = code;
+        this.title = title;
+        this.description = description;
+        this.capacity = capacity;
+        this.schedule = schedule;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public String getSchedule() {
+        return schedule;
+    }
+}
+
+class Student {
+    private int id;
+    private String name;
+    private List<Course> registeredCourses;
+
+    public Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+        this.registeredCourses = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Course> getRegisteredCourses() {
+        return registeredCourses;
+    }
+
+    public void registerCourse(Course course) {
+        registeredCourses.add(course);
+    }
+
+    public void dropCourse(Course course) {
+        registeredCourses.remove(course);
+    }
+}
+
+class CourseListing {
+    private List<Course> courses;
+
+    public CourseListing(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void displayCourses() {
+        for (Course course : courses) {
+            System.out.println("Course Code: " + course.getCode());
+            System.out.println("Title: " + course.getTitle());
+            System.out.println("Description: " + course.getDescription());
+            System.out.println("Capacity: " + course.getCapacity());
+            System.out.println("Schedule: " + course.getSchedule());
+            System.out.println();
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Course> courses = new ArrayList<>();
+        courses.add(new Course("CSE101", "Introduction to Programming", "This course introduces students to the basics of programming.", 50, "Monday, 9:00 AM"));
+        courses.add(new Course("CSE202", "Data Structures", "This course covers the fundamentals of data structures and algorithms.", 40, "Tuesday, 10:00 AM"));
+        courses.add(new Course("CSE303", "Computer Networks", "This course covers the basics of computer networks and communication protocols.", 30, "Wednesday, 11:00 AM"));
+
+        List<Student> students = new ArrayList<>();
+        students.add(new Student(1, "John Doe"));
+        students.add(new Student(2, "Jane Smith"));
+
+        CourseListing courseListing = new CourseListing(courses);
+        courseListing.displayCourses();
+
+        for (Student student : students) {
+            System.out.println("Student ID: " + student.getId());
+            System.out.println("Name: " + student.getName());
+            System.out.println();
+
+            for (Course course : courses) {
+                if (student.getRegisteredCourses().contains(course)) {
+                    System.out.println("Registered Course: " + course.getCode());
+                }
+            }
+
+            System.out.println();
+        }
+    }
+}
